@@ -1,10 +1,7 @@
 import React, { useState } from "react";
 import {
-  Box,
   Grid,
-  AppBar,
   Button,
-  Toolbar,
   TextField,
   Typography,
   CssBaseline,
@@ -13,6 +10,7 @@ import {
   CardContent,
   Container
 } from "@material-ui/core";
+import Skeleton from "@material-ui/lab/Skeleton";
 import { makeStyles } from "@material-ui/core/styles";
 
 import { apiRequest, API_URL } from "../utils";
@@ -41,8 +39,21 @@ export default function App() {
   const bull = <span className={classes.bullet}>•</span>;
   const [value, setValue] = useState({ original: "", paraphrased: "" });
   const [data, setData] = useState({ original: [], paraphrased: [] });
+  const [loading, setLoading] = useState({
+    original: false,
+    paraphrased: false
+  });
 
-  const renderData = hits => {
+  const renderData = (hits, field) => {
+    if (loading[field]) {
+      return (
+        <div className={classes.root}>
+          <Skeleton />
+          <Skeleton animation={false} />
+          <Skeleton animation="wave" />
+        </div>
+      );
+    }
     return hits.map(
       ({ title, link, position, related_pages_link, snippet }) => {
         return (
@@ -71,6 +82,7 @@ export default function App() {
     if (!q || !q.length) {
       return;
     }
+    setLoading({ ...loading, [field]: true });
     const response = await apiRequest(`${API_URL}/search`, {
       params: {
         engine: "google",
@@ -83,6 +95,7 @@ export default function App() {
       ...prev,
       [field]: response.data.organic_results || []
     }));
+    setLoading({ ...loading, [field]: false });
   };
 
   const handleChange = ({ target }) => {
@@ -117,6 +130,7 @@ export default function App() {
                   onClick={async () => {
                     requestData(inputValue, field);
                   }}
+                  disabled={loading[field]}
                 >
                   {buttonLabel}
                 </Button>
@@ -132,7 +146,7 @@ export default function App() {
                   style={{ marginBottom: 10 }}
                 />
 
-                {renderData(data[field])}
+                {renderData(data[field], field)}
               </Grid>
             );
           })}
