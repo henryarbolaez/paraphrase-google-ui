@@ -132,7 +132,7 @@ export default function App() {
                   style={{ marginBottom: 10 }}
                 />
 
-                {renderData(data.original)}
+                {renderData(data[field])}
               </Grid>
             );
           })}
