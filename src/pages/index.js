@@ -1,19 +1,20 @@
 import React, { useState } from "react";
 import {
   Grid,
+  Box,
+  Card,
   Button,
+  Container,
   TextField,
   Typography,
-  CssBaseline,
-  ThemeProvider,
-  Card,
   CardContent,
-  Container
+  CssBaseline,
+  ThemeProvider
 } from "@material-ui/core";
 import Skeleton from "@material-ui/lab/Skeleton";
 import { makeStyles } from "@material-ui/core/styles";
 
-import { apiRequest, API_URL } from "../utils";
+import { apiRequest, API_URL, calculateManhattanDistance } from "../utils";
 
 import theme from "../theme";
 
@@ -85,8 +86,9 @@ export default function App() {
     setLoading({ ...loading, [field]: true });
     const response = await apiRequest(`${API_URL}/search`, {
       params: {
-        engine: "google",
         q,
+        num: 10,
+        engine: "google",
         google_domain: "google.com"
       }
     });
@@ -119,6 +121,9 @@ export default function App() {
     <ThemeProvider theme={theme}>
       <CssBaseline />
       <Container maxWidth>
+        <Box variant="h3" component={Typography} style={{ margin: "0 auto" }}>
+          Score: {calculateManhattanDistance(data) || "N/A"}
+        </Box>
         <Grid container className={classes.root} spacing={2}>
           {dataToRender.map(({ inputValue, field, buttonLabel }) => {
             return (
