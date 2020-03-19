@@ -93,7 +93,7 @@ export default function App() {
     if (response.data) {
       setData(prev => ({
         ...prev,
-        [field]: response.data.organic_results.splice(0, LIMIT) || []
+        [field]: response.data.organicResults.splice(0, LIMIT) || []
       }));
     } else {
       console.log("===ERROR", response.error.message);
