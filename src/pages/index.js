@@ -29,15 +29,11 @@ const useStyles = makeStyles({
   },
   title: {
     fontSize: 18
-  },
-  pos: {
-    marginBottom: 12
   }
 });
 
 export default function App() {
   const classes = useStyles();
-  const bull = <span className={classes.bullet}>•</span>;
   const [value, setValue] = useState({ original: "", paraphrased: "" });
   const [data, setData] = useState({ original: [], paraphrased: [] });
   const [loading, setLoading] = useState({
@@ -66,8 +62,6 @@ export default function App() {
                 gutterBottom
               >
                 {title}
-                {bull}
-                {position}
               </Typography>
               <Typography variant="body3" component="p">
                 {snippet}
@@ -87,7 +81,7 @@ export default function App() {
     const response = await apiRequest(`${API_URL}/search`, {
       params: {
         q,
-        num: 10,
+        num: 5,
         engine: "google",
         google_domain: "google.com"
       }
@@ -122,7 +116,7 @@ export default function App() {
       <CssBaseline />
       <Container maxWidth>
         <Box variant="h3" component={Typography} style={{ margin: "0 auto" }}>
-          Score: {calculateManhattanDistance(data) || "N/A"}
+          Score: {calculateManhattanDistance(data)}
         </Box>
         <Grid container className={classes.root} spacing={2}>
           {dataToRender.map(({ inputValue, field, buttonLabel }) => {
