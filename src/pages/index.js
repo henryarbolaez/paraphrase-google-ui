@@ -83,16 +83,17 @@ export default function App() {
     const response = await apiRequest(`${API_URL}/search`, {
       params: {
         q,
-        num: 7,
+        num: 40,
         engine: "google",
         google_domain: "google.com"
       }
     });
 
+    const LIMIT = 6;
     if (response.data) {
       setData(prev => ({
         ...prev,
-        [field]: response.data.organic_results || []
+        [field]: response.data.organic_results.splice(0, LIMIT) || []
       }));
     } else {
       console.log("===ERROR", response.error.message);
