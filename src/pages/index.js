@@ -3,6 +3,7 @@ import {
   Grid,
   Box,
   Card,
+  Link,
   Button,
   Container,
   TextField,
@@ -63,6 +64,7 @@ export default function App() {
               >
                 {title}
               </Typography>
+              <Link href={link}>{link}</Link>
               <Typography variant="body3" component="p">
                 {snippet}
               </Typography>
@@ -87,10 +89,14 @@ export default function App() {
       }
     });
 
-    setData(prev => ({
-      ...prev,
-      [field]: response.data.organic_results || []
-    }));
+    if (response.data) {
+      setData(prev => ({
+        ...prev,
+        [field]: response.data.organic_results || []
+      }));
+    } else {
+      console.log("===ERROR", response.error.message);
+    }
     setLoading({ ...loading, [field]: false });
   };
 
