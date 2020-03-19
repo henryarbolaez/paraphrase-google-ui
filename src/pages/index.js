@@ -83,7 +83,7 @@ export default function App() {
     const response = await apiRequest(`${API_URL}/search`, {
       params: {
         q,
-        num: 5,
+        num: 6,
         engine: "google",
         google_domain: "google.com"
       }
