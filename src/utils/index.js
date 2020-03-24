@@ -15,27 +15,29 @@ export const apiRequest = async (
   }
 };
 
+const findLink = (data, link) => data.filter(search => search.link === link);
+
 export const calculateManhattanDistance = data => {
   if (!data.original.length || !data.paraphrased.length) {
     return "NA";
   }
 
-  // debugger;
   const originalData = {};
-  data.original.forEach(
-    ({ link, position }) => (originalData[link] = position)
-  );
+  data.original.forEach(({ link, position }) => (originalData[link] = 1));
 
-  let notFoundIndex = 0;
   const paraphraseData = {};
   for (let index = 0; index < data.paraphrased.length; index++) {
-    const { link } = data.paraphrased[index];
-    if (!originalData[link]) {
-      paraphraseData[link] = notFoundIndex;
-      // notFoundIndex;
+    const { link, position } = data.paraphrased[index];
+    const anyOriginal = findLink(data.original, link);
+    if (!anyOriginal.length) {
+      paraphraseData[link] = 0;
       continue;
     }
-    paraphraseData[link] = originalData[link];
+    paraphraseData[link] = 1;
+    const originalFound = anyOriginal[0];
+    if (originalFound && originalFound.position === position) {
+      originalData[link] = 1.2;
+    }
   }
   const oArray = Object.values(originalData);
   let pArray = Object.values(paraphraseData);
@@ -43,9 +45,7 @@ export const calculateManhattanDistance = data => {
     pArray.splice(oArray.length);
   } else if (pArray.length < oArray.length) {
     pArray.push(
-      ...[...Array(oArray.length - pArray.length).keys()].map(
-        i => notFoundIndex
-      )
+      ...[...Array(oArray.length - pArray.length).keys()].map(i => 0)
     );
   }
 
