@@ -52,27 +52,25 @@ export default function App() {
         </div>
       );
     }
-    return hits.map(
-      ({ title, link, position, related_pages_link, snippet }) => {
-        return (
-          <Card className={classes.root}>
-            <CardContent>
-              <Typography
-                className={classes.title}
-                color="textSecondary"
-                gutterBottom
-              >
-                {title}
-              </Typography>
-              <Link href={link}>{link}</Link>
-              <Typography variant="body3" component="p">
+    return hits.map(({ title, link, position, snippet }) => {
+      return (
+        <Card className={classes.root}>
+          <CardContent>
+            <Typography
+              className={classes.title}
+              color="textSecondary"
+              gutterBottom
+            >
+              {title}
+            </Typography>
+            <Link href={link}>{link}</Link>
+            {/* <Typography variant="body3" component="p">
                 {snippet}
-              </Typography>
-            </CardContent>
-          </Card>
-        );
-      }
-    );
+              </Typography> */}
+          </CardContent>
+        </Card>
+      );
+    });
   };
 
   const requestData = async (q, field) => {
@@ -89,7 +87,7 @@ export default function App() {
       }
     });
 
-    const LIMIT = 6;
+    const LIMIT = 10;
     if (response.data) {
       setData(prev => ({
         ...prev,
