@@ -4,6 +4,7 @@ import {
   Box,
   Card,
   Link,
+  Chip,
   Button,
   Container,
   TextField,
@@ -15,18 +16,19 @@ import {
 import Skeleton from "@material-ui/lab/Skeleton";
 import { makeStyles } from "@material-ui/core/styles";
 
-import { apiRequest, API_URL, calculateManhattanDistance } from "../utils";
+import {
+  API_URL,
+  findLink,
+  apiRequest,
+  calculateManhattanDistance
+} from "../utils";
 
 import theme from "../theme";
 
 const useStyles = makeStyles({
   root: {
-    marginTop: 3
-  },
-  bullet: {
-    display: "inline-block",
-    margin: "0 2px",
-    transform: "scale(0.8)"
+    marginTop: 3,
+    position: "relative"
   },
   title: {
     fontSize: 18
@@ -53,8 +55,28 @@ export default function App() {
       );
     }
     return hits.map(({ title, link, position, snippet }) => {
+      const isParaphrased = field === "paraphrased";
+
+      let className = "";
+      let pos;
+      if (data.original.length && data.paraphrased.length) {
+        if (isParaphrased) {
+          const anyOriginal = findLink(data.original, link);
+          if (anyOriginal.length) {
+            pos = anyOriginal[0].position;
+            className = `colors-${pos}`;
+          }
+        } else {
+          const anyParaphrased = findLink(data.paraphrased, link);
+          if (anyParaphrased.length) {
+            pos = position;
+            className = `colors-${position}`;
+          }
+        }
+      }
+
       return (
-        <Card className={classes.root}>
+        <Card className={[classes.root, className].join(" ")}>
           <CardContent>
             <Typography
               className={classes.title}
@@ -64,9 +86,13 @@ export default function App() {
               {title}
             </Typography>
             <Link href={link}>{link}</Link>
-            {/* <Typography variant="body3" component="p">
-                {snippet}
-              </Typography> */}
+            {pos && (
+              <Chip
+                size="small"
+                style={{ position: "absolute", top: 0, right: 0 }}
+                label={pos}
+              />
+            )}
           </CardContent>
         </Card>
       );
@@ -80,7 +106,7 @@ export default function App() {
     setLoading({ ...loading, [field]: true });
     const response = await apiRequest(`${API_URL}/search`, {
       params: {
-        q,
+        q: q.trim(),
         num: 40,
         engine: "google",
         google_domain: "google.com"
@@ -123,7 +149,7 @@ export default function App() {
         <Box variant="h3" component={Typography} style={{ margin: "0 auto" }}>
           Score: {calculateManhattanDistance(data)}
         </Box>
-        <Grid container className={classes.root} spacing={2}>
+        <Grid container className={classes.root} spacing={6}>
           {dataToRender.map(({ inputValue, field, buttonLabel }) => {
             return (
               <Grid item sm={6}>

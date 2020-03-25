@@ -6,3 +6,13 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
+
+@mixin random-bg() {
+  border: 4px solid rgb(random(255), random(255), random(255));
+}
+
+@for $i from 1 to 11 {
+  .colors-#{$i} {
+    @include random-bg();
+  }
+}

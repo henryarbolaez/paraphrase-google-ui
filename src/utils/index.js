@@ -2,7 +2,7 @@ import axios from "axios";
 var similarity = require("compute-cosine-similarity");
 
 export const API_URL =
-  process.env.REACT_APP_API_URL || "http://localhost:5000/api";
+  process.env.REACT_APP_API_URL || "http://localhost:5006/api";
 
 export const apiRequest = async (
   endpoint,
@@ -15,7 +15,8 @@ export const apiRequest = async (
   }
 };
 
-const findLink = (data, link) => data.filter(search => search.link === link);
+export const findLink = (data, link) =>
+  data.filter(search => search.link === link);
 
 export const calculateManhattanDistance = data => {
   if (!data.original.length || !data.paraphrased.length) {
@@ -36,7 +37,7 @@ export const calculateManhattanDistance = data => {
     paraphraseData[link] = 1;
     const originalFound = anyOriginal[0];
     if (originalFound && originalFound.position === position) {
-      originalData[link] = 1.2;
+      originalData[link] = 1.4;
     }
   }
   const oArray = Object.values(originalData);
