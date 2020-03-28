@@ -23,6 +23,6 @@ body {
     @include random-border($green, $red, $blue);
   }
   .bg-visiblity {
-    @include random-bg($green, $red, $blue);
+    background: rgba(241, 247, 82, 0.2) !important;
   }
 }

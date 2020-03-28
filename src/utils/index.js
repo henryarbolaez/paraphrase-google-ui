@@ -15,9 +15,10 @@ export const apiRequest = async (
   }
 };
 
-const titleLinkCombo = (title, url) => {
-  const hostname = new URL(url).hostname || url;
-  return `${title.toLowerCase().trim()}-${hostname}`;
+const titleLinkCombo = (title, link) => {
+  return link;
+  // const hostname = new URL(link).hostname || link;
+  //return `${title.toLowerCase().trim()}-${hostname}`;
 };
 
 export const findLink = (data, link, title) => {

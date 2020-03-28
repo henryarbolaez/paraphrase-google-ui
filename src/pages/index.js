@@ -52,6 +52,8 @@ export default function App() {
     return hits.map(({ title, link, position, snippet }) => {
       const isParaphrased = field === "paraphrased";
       const topMatchers = ["chegg", "slader", "bartleby"];
+      const isValidMatch = topMatchers.filter(name => link.indexOf(name) >= 0)
+        .length;
 
       let className = "";
       let pos;
@@ -71,8 +73,6 @@ export default function App() {
         }
       }
 
-      const isValidMatch = topMatchers.filter(name => link.indexOf(name) >= 0)
-        .length;
       return (
         <Card
           className={[
