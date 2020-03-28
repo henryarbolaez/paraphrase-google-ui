@@ -15,8 +15,17 @@ export const apiRequest = async (
   }
 };
 
-export const findLink = (data, link) =>
-  data.filter(search => search.link === link);
+const titleLinkCombo = (title, url) => {
+  const hostname = new URL(url).hostname || url;
+  return `${title.toLowerCase().trim()}-${hostname}`;
+};
+
+export const findLink = (data, link, title) => {
+  return data.filter(
+    search =>
+      titleLinkCombo(search.title, search.link) === titleLinkCombo(title, link)
+  );
+};
 
 export const calculateManhattanDistance = data => {
   if (!data.original.length || !data.paraphrased.length) {
@@ -28,8 +37,8 @@ export const calculateManhattanDistance = data => {
 
   const paraphraseData = {};
   for (let index = 0; index < data.paraphrased.length; index++) {
-    const { link, position } = data.paraphrased[index];
-    const anyOriginal = findLink(data.original, link);
+    const { link, position, title } = data.paraphrased[index];
+    const anyOriginal = findLink(data.original, link, title);
     if (!anyOriginal.length) {
       paraphraseData[link] = 0;
       continue;
@@ -37,7 +46,7 @@ export const calculateManhattanDistance = data => {
     paraphraseData[link] = 1;
     const originalFound = anyOriginal[0];
     if (originalFound && originalFound.position === position) {
-      originalData[link] = 1.4;
+      originalData[link] = 1.3;
     }
   }
   const oArray = Object.values(originalData);

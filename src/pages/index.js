@@ -26,13 +26,8 @@ import {
 import theme from "../theme";
 
 const useStyles = makeStyles({
-  root: {
-    marginTop: 3,
-    position: "relative"
-  },
-  title: {
-    fontSize: 18
-  }
+  root: { marginTop: 3, position: "relative" },
+  title: { fontSize: 18 }
 });
 
 export default function App() {
@@ -56,18 +51,19 @@ export default function App() {
     }
     return hits.map(({ title, link, position, snippet }) => {
       const isParaphrased = field === "paraphrased";
+      const topMatchers = ["chegg", "slader", "bartleby"];
 
       let className = "";
       let pos;
       if (data.original.length && data.paraphrased.length) {
         if (isParaphrased) {
-          const anyOriginal = findLink(data.original, link);
+          const anyOriginal = findLink(data.original, link, title);
           if (anyOriginal.length) {
             pos = anyOriginal[0].position;
             className = `colors-${pos}`;
           }
         } else {
-          const anyParaphrased = findLink(data.paraphrased, link);
+          const anyParaphrased = findLink(data.paraphrased, link, title);
           if (anyParaphrased.length) {
             pos = position;
             className = `colors-${position}`;
@@ -75,8 +71,16 @@ export default function App() {
         }
       }
 
+      const isValidMatch = topMatchers.filter(name => link.indexOf(name) >= 0)
+        .length;
       return (
-        <Card className={[classes.root, className].join(" ")}>
+        <Card
+          className={[
+            classes.root,
+            className,
+            !!isValidMatch ? "bg-visiblity" : ""
+          ].join(" ")}
+        >
           <CardContent>
             <Typography
               className={classes.title}
@@ -131,14 +135,14 @@ export default function App() {
 
   const dataToRender = [
     {
-      buttonLabel: "Search Original",
       field: "original",
-      inputValue: value.original
+      inputValue: value.original,
+      buttonLabel: "Search Original"
     },
     {
-      buttonLabel: "Search Paraphrased",
       field: "paraphrased",
-      inputValue: value.paraphrased
+      inputValue: value.paraphrased,
+      buttonLabel: "Search Paraphrased"
     }
   ];
 
