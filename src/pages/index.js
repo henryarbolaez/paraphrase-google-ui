@@ -11,7 +11,7 @@ import {
   Typography,
   CardContent,
   CssBaseline,
-  ThemeProvider
+  ThemeProvider,
 } from "@material-ui/core";
 import Skeleton from "@material-ui/lab/Skeleton";
 import { makeStyles } from "@material-ui/core/styles";
@@ -20,14 +20,14 @@ import {
   API_URL,
   findLink,
   apiRequest,
-  calculateManhattanDistance
+  calculateManhattanDistance,
 } from "../utils";
 
 import theme from "../theme";
 
 const useStyles = makeStyles({
   root: { marginTop: 3, position: "relative" },
-  title: { fontSize: 18 }
+  title: { fontSize: 18 },
 });
 
 export default function App() {
@@ -36,7 +36,7 @@ export default function App() {
   const [data, setData] = useState({ original: [], paraphrased: [] });
   const [loading, setLoading] = useState({
     original: false,
-    paraphrased: false
+    paraphrased: false,
   });
 
   const renderData = (hits, field) => {
@@ -52,7 +52,7 @@ export default function App() {
     return hits.map(({ title, link, position, snippet }) => {
       const isParaphrased = field === "paraphrased";
       const topMatchers = ["chegg", "slader", "bartleby"];
-      const isValidMatch = topMatchers.filter(name => link.indexOf(name) >= 0)
+      const isValidMatch = topMatchers.filter((name) => link.indexOf(name) >= 0)
         .length;
 
       let className = "";
@@ -78,7 +78,7 @@ export default function App() {
           className={[
             classes.root,
             className,
-            !!isValidMatch ? "bg-visiblity" : ""
+            !!isValidMatch ? "bg-visiblity" : "",
           ].join(" ")}
         >
           <CardContent>
@@ -113,15 +113,15 @@ export default function App() {
         q: q.trim(),
         num: 40,
         engine: "google",
-        google_domain: "google.com"
-      }
+        google_domain: "google.com",
+      },
     });
 
     const LIMIT = 10;
     if (response.data) {
-      setData(prev => ({
+      setData((prev) => ({
         ...prev,
-        [field]: response.data.organicResults.splice(0, LIMIT) || []
+        [field]: response.data.organicResults.splice(0, LIMIT) || [],
       }));
     } else {
       console.log("===ERROR", response.error.message);
@@ -137,13 +137,13 @@ export default function App() {
     {
       field: "original",
       inputValue: value.original,
-      buttonLabel: "Search Original"
+      buttonLabel: "Search Original",
     },
     {
       field: "paraphrased",
       inputValue: value.paraphrased,
-      buttonLabel: "Search Paraphrased"
-    }
+      buttonLabel: "Search Paraphrased",
+    },
   ];
 
   return (
